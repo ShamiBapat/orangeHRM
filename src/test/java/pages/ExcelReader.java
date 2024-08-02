@@ -1,4 +1,4 @@
-package com.pages;
+package pages;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,12 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -31,6 +26,7 @@ public class ExcelReader {
 	private XSSFSheet sheet = null;
 	private XSSFRow row = null;
 	private XSSFCell cell = null;
+
 
 	public List<Map<String, String>> getData(String excelFilePath, String sheetName){
 		Sheet sheet = getSheetByName(excelFilePath, sheetName);
@@ -57,6 +53,27 @@ public class ExcelReader {
 			throw new RuntimeException(e);
 		}
 		return workbook;
+	}
+	public String getCellData(String sheetName,int rownum,int colnum) throws IOException
+	{
+		fis=new FileInputStream(path);
+		workbook=new XSSFWorkbook(fis);
+		sheet=workbook.getSheet(sheetName);
+		row=sheet.getRow(rownum);
+		cell=row.getCell(colnum);
+
+		DataFormatter formatter = new DataFormatter();
+		String data;
+		try{
+			data = formatter.formatCellValue(cell); //Returns the formatted value of a cell as a String regardless of the cell type.
+		}
+		catch(Exception e)
+		{
+			data="";
+		}
+		workbook.close();
+		fis.close();
+		return data;
 	}
 	private List<Map<String, String>> readSheet(Sheet sheet) {
 		Row row;
@@ -160,6 +177,26 @@ public class ExcelReader {
 		}
 		return columnMapdata;
 	}
-	
+	// This is code from Reshu github
+	public static String xlsxFilePath= "src\\test\\resources\\TestData\\AutomationTestData.xlsx";
+	public List<Map<String,String>> getTestDataFromSheet(String sheetName) throws IOException
+	{
+		File file = new File(xlsxFilePath);
+		XSSFWorkbook workbook = null;
+		XSSFSheet sheet = null;
+		try{
+			FileInputStream inputStream = new FileInputStream(file);
+			workbook = new XSSFWorkbook(inputStream);
+			sheet = workbook.getSheet(sheetName);
+
+		} catch(Exception e) {
+			System.out.println("Error while reading test data from excel file");
+		} finally {
+			if(workbook != null)
+				workbook.close();
+		}
+		return  readSheet(sheet);
+	}
+
 
 }

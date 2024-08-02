@@ -6,6 +6,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 public class DriverFactory {
 

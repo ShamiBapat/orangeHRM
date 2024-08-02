@@ -3,10 +3,8 @@ package pages;
 import org.languagetool.JLanguageTool;
 import org.languagetool.language.AmericanEnglish;
 import org.languagetool.rules.RuleMatch;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.Color;
 
 import java.io.IOException;
@@ -17,34 +15,33 @@ import java.util.List;
 
 public class LoginPage {
     private WebDriver driver;
+    private Actions action;
 
     //constructor
-    public LoginPage(WebDriver driver) {
+    public LoginPage(WebDriver driver)
+    {
         this.driver = driver;
+        this.action = new Actions(driver);
     }
 
     //locators or Object Repository
     private By userName = By.name("username");
     private By passwordLocator = By.name("password");
-    private By loginButton = By.xpath("//button[@type='submit']");
+    private By loginButton = By.xpath("//button[normalize-space()='Login']");
     private By logoImg = By.xpath("//div[@class='orangehrm-login-logo']");
     private By forgotPwdLink = By.linkText("Forgot your password? ");
     private By pageNotFoundError = By.xpath("//span[@jsselect='heading']");
     private By reloadButtonPageError = By.id("reload-button");
-
+    private By invalidLoginMsg = By.xpath("//div[@class='oxd-alert-content oxd-alert-content--error']");
 
     // methods/actions
+
+    public String currentURL(){
+        return driver.getCurrentUrl();
+    }
     public void enterUserName(String username){
         WebElement uname = driver.findElement(userName);
         uname.sendKeys(username);
-    }
-    public boolean isReloadButtonVisible(){
-        boolean flag = false;
-        WebElement reload = driver.findElement(reloadButtonPageError);
-        if(reload.isDisplayed()){
-            return true;
-        }
-        return flag;
     }
     public void enterPassword(String password){
         WebElement pwd = driver.findElement(passwordLocator);
@@ -70,10 +67,6 @@ public class LoginPage {
 
         return driver.getTitle();
     }
-
-    public String getPageNotFoundErrorMsg(){
-        return driver.findElement(pageNotFoundError).getText().trim();
-    }
     public void spellCheckLoginPage(){
         WebElement allPage = driver.findElement(By.tagName("body"));
         String PageText = allPage.getText();
@@ -98,11 +91,22 @@ public class LoginPage {
     }
     public Boolean LogoAlignment() throws InterruptedException {
         boolean logoLocation = false;
-        Thread.sleep(5000);
+        Thread.sleep(1000);
         WebElement logo = driver.findElement(logoImg);
-//        System.out.println("Height = "+logo.getRect().getHeight()+"Width="+logo.getRect().getWidth());
-        String Location = logo.getCssValue("text-align");
-        System.out.println("Alignment = "+Location);
+        // Get the element's X coordinate
+        int xCoord = logo.getLocation().getX();
+        // Get the viewport width
+        Dimension dim = driver.manage().window().getSize();
+        int viewportWidth = dim.getWidth();
+        // Determine if the element is on the right side
+        boolean isElementOnRightSide = xCoord > (viewportWidth / 2);
+        if (isElementOnRightSide) {
+            System.out.println("The element is positioned on the right side of the webpage.");
+            logoLocation = true;
+        } else {
+            System.out.println("The element is not positioned on the right side of the webpage.");
+            logoLocation = false;
+        }
         return logoLocation;
     }
     public Boolean textColor() throws InterruptedException {
@@ -122,22 +126,52 @@ public class LoginPage {
         HttpURLConnection huc = null;
         boolean flag = false;
         try {
-            huc = (HttpURLConnection)(new URL(link).openConnection());
-            huc.connect();
-            System.out.println(huc.getResponseCode());
+            URL url = new URL("https://www.abcd.com");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            int responseCode = connection.getResponseCode();
 
-            if(huc.getResponseCode()>=400){
+         //   huc = (HttpURLConnection)(new URL(link).openConnection());
+         //   System.out.println("connecting..");
+         //   huc.connect();
+            System.out.println(connection.getResponseCode());
+
+            if(connection.getResponseCode()>=400){
                 System.out.println("Invalid link");
-                return false;
+                flag = true;
             }
-            if(huc.getResponseCode()==200){
+            else {
                 System.out.println("valid url");
-                return true;
+                flag =false;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("flag value "+flag);
         return flag;
+    }
+
+    public void checkInvalidURL(String link) throws IOException {
+        String invalidUrl = link;
+        URL url = new URL(invalidUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("HEAD");
+        connection.connect();
+
+        int statusCode = connection.getResponseCode();
+        if (statusCode ==200) {
+
+            System.out.println("the valid URL is: " + url + "-" + statusCode);
+        }
+        if (statusCode == HttpURLConnection.HTTP_NOT_FOUND ) {
+
+            System.out.println("The invalid URL is: " + url + " #statusCode: " + statusCode);
+
+        }
+        // System.out.println("Status Code: " + statusCode);
+
+        connection.disconnect();
+
     }
     public void brokenLinksOnPage(String URL){
         HttpURLConnection huc = null;
@@ -169,5 +203,18 @@ public class LoginPage {
                 throw new RuntimeException(e);
             }
         }
+    }
+    public void mouseClickLogin(){
+        WebElement loginBtn = driver.findElement(loginButton);
+        action.click(loginBtn).perform();
+    }
+
+    public void keyboardPressLogin(){
+        WebElement loginBtn = driver.findElement(loginButton);
+        loginBtn.sendKeys(Keys.RETURN);
+    }
+
+    public String getErrorMsg(){
+        return driver.findElement(invalidLoginMsg).getText();
     }
 }
