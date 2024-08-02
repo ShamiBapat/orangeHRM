@@ -24,8 +24,9 @@ Feature: Login Page validations
     When User gives correct website link
     Then user should see username in gray color
 
-  Scenario Outline:
-    Given User enters invalid "<username>" and "<password>"
+  Scenario Outline: invalid cases
+    Given user launches OrangeHRM
+    And User enters invalid "<username>" and "<password>"
     When User clicks login button using mouse
     Then user gets error message as "Invalid credentials"
     Examples:
@@ -35,10 +36,14 @@ Feature: Login Page validations
     |#@$cbjsl|password|
     |47389290|password|
 
-    Scenario Outline:
-      Given user enters credentials from "<sheetname>" and "<rownumber>"
+    Scenario Outline: valid testcases
+      Given user launches OrangeHRM
+      And user enters credentials from "<sheetname>" and <rownumber>
       When user presses enter key on keyboard
-      Then user gets error message as "Invalid credentials"
+      Then user logs in successfully and lands on "dashboard" url
       Examples:
       |sheetname|rownumber|
       |login    |0        |
+
+
+
