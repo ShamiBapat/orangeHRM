@@ -1,6 +1,7 @@
 
 package StepDefinitions;
 
+import Hooks.AppHooks;
 import Hooks.DriverFactory;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -12,12 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import pages.ExcelReader;
 import pages.LoginPage;
-import utilities.configReader;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
@@ -28,8 +27,17 @@ public class LoginPageSteps{
     String url;
     String invalidUrl;
 
-    private LoginPage loginPage = new LoginPage(DriverFactory.getDriver());
+    private LoginPage loginPage;
     public static ResourceBundle config =ResourceBundle.getBundle("config");
+
+    public LoginPageSteps () {
+//        loginPage = new LoginPage(DriverFactory.getDriver());
+        this.driver = DriverFactory.getDriver();
+        this.loginPage = new LoginPage(driver);
+
+//        this.driver = appHooks.getDriver();
+//        this.loginPage = new LoginPage(driver);
+    }
 
 
     @Given("User launches the browser")

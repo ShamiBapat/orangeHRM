@@ -150,6 +150,13 @@
 		   <artifactId>language-en</artifactId>
 		   <version>6.4</version>
 	   </dependency>
+	   <!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-picocontainer -->
+	   <dependency>
+		   <groupId>io.cucumber</groupId>
+		   <artifactId>cucumber-picocontainer</artifactId>
+		   <version>7.15.0</version>
+	   </dependency>
+
 	   <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
 	   <dependency>
 		   <groupId>org.slf4j</groupId>

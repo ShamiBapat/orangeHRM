@@ -6,20 +6,21 @@ import java.util.Properties;
 
 public class configReader {
 
-    private Properties prop;
+    public static Properties prop = new Properties();
 
     /**
      * This method is used to load the properties from congig.properties file
      * @return it returns Properties prop object
      */
 
-    public Properties init_prop() {
+    public static Properties init_prop() {
 
-        prop = new Properties();
+        Properties prop = new Properties();
         try {
 
             FileInputStream ip = new FileInputStream("./src/test/resources/config.properties");
             prop.load(ip);
+
         }
         catch(IOException ignored)
         {

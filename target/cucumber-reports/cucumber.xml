@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testsuite errors="0" failures="0" name="io.cucumber.core.plugin.JUnitFormatter" skipped="0" tests="1" time="16.754">
+    <testcase classname="Login Page validations" name="valid testcases" time="16.297">
+        <system-out><![CDATA[Given user launches OrangeHRM...............................................passed
+And user enters credentials from "login" and 0..............................passed
+When user presses enter key on keyboard.....................................passed
+Then user logs in successfully and lands on "dashboard" url.................passed
+]]></system-out>
+    </testcase>
+</testsuite>

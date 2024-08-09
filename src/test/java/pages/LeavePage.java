@@ -9,17 +9,17 @@ import org.openqa.selenium.support.ui.Select;
 
 import java.util.concurrent.TimeUnit;
 
-public class LeavePage extends DriverFactory {
+public class LeavePage{
     private WebDriver driver;
     private Actions action;
-//
-//    //constructor
-//    public LeavePage(WebDriver driver)
-//    {
-//        this.driver = driver;
-//        this.action = new Actions(driver);
-//        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-//    }
+
+    //constructor
+    public LeavePage(WebDriver driver)
+    {
+        this.driver = driver;
+        this.action = new Actions(driver);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+    }
 
     // locators
     private By LeaveLink = By.xpath("//span[text()='Leave']");
@@ -44,8 +44,10 @@ public class LeavePage extends DriverFactory {
         driver.findElement(LeaveLink).click();
     }
 
-    public void clickApplyTop(){
+    public void clickApplyTop()
+    {
         driver.findElement(ApplyTop).click();
+
     }
     public void selectLeaveType() throws InterruptedException {
         driver.findElement(leaveTypeArrow).click();
@@ -55,19 +57,32 @@ public class LeavePage extends DriverFactory {
         option.click();
         Thread.sleep(5000);
     }
-     public String availableLeave(){
+     public String availableLeave()
+     {
         return driver.findElement(leaveBalance).getText();
+
      }
-    public void selectDatePicker() throws InterruptedException {
+    public void selectDatePicker(String expectedDate) throws InterruptedException {
+        // Split the date into year, month, and day
+        String[] dateParts = expectedDate.split("-");
+        String year = dateParts[0];
+        System.out.println("year="+year);
+        String month = dateParts[1];
+        System.out.println("month="+month);
+        String day = dateParts[2];
+        System.out.println("day="+day);
+
         String expectedMonth = "December";
         String expectedYear = "2025";
         String expectedDay = "25";
 
         driver.findElement(FromDate).click();
         String currentMonth = driver.findElement(monthCalender).getText();
+        System.out.println("Current month ="+currentMonth);
         String currentYear = driver.findElement(yearCalender).getText();
+        System.out.println("Current year="+currentYear);
 
-        while(!(currentMonth.equalsIgnoreCase(expectedMonth) && currentYear.equalsIgnoreCase(expectedYear))){
+        while(!(currentMonth.equalsIgnoreCase(month) && currentYear.equalsIgnoreCase(year))){
             driver.findElement(nextCalender).click();
             currentMonth = driver.findElement(monthCalender).getText();
             currentYear = driver.findElement(yearCalender).getText();

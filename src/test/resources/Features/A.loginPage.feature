@@ -36,6 +36,7 @@ Feature: Login Page validations
     |#@$cbjsl|password|
     |47389290|password|
 
+    @ExcelData
     Scenario Outline: valid testcases
       Given user launches OrangeHRM
       And user enters credentials from "<sheetname>" and <rownumber>

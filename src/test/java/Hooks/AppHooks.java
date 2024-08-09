@@ -1,44 +1,36 @@
 package Hooks;
 
-import com.beust.jcommander.Parameter;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.testng.ITestContext;
 import org.testng.annotations.Parameters;
-import pages.LoginPage;
-import utilities.configReader;
 
-import java.io.File;
-import java.util.Properties;
+import java.util.ResourceBundle;
 
+//AppHooks class initializes and quits the driver properly
 public class AppHooks {
 
-   DriverFactory driverFactory;
    WebDriver driver;
-   configReader cp;
-   Properties prop;
-   LoginPage login;
+    public static ResourceBundle config =ResourceBundle.getBundle("config");
 
-    @Before(order =0)
-    public void readProperty(){
-       cp = new configReader();
-       prop = cp.init_prop();
-    }
-    //@Parameters({"browserName"})
-    @Before(order=1)
-    public void launchBrowser(){
-        String browserName = prop.getProperty("browser");
-        driverFactory=new DriverFactory();
-        driver = driverFactory.initDriver(browserName);
+    @Before
+//    @Parameters("browser")
+    public void setup(Scenario scenario){
+        // Retrieve the browser parameter from the system properties set in the TestNG suite(xml file)
+        String browser = System.getProperty("browser");
+        driver = DriverFactory.getInstance().initDriver(browser);
+        driver.get(config.getString("validURL"));
     }
 
     @After(order=0)
     public void tearDown(){
-        driver.quit();
+        DriverFactory.quitBrowser();
     }
+
     @After(order=1)
     public void TakeFailedScreenshots(Scenario scenario){
         if(scenario.isFailed()){

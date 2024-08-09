@@ -11,9 +11,9 @@ import pages.LoginPage;
 
 import java.util.ResourceBundle;
 
-public class LeavePageSteps extends DriverFactory {
+public class LeavePageSteps{
     String url;
-    private LeavePage lp = new LeavePage();
+    private LeavePage lp = new LeavePage(DriverFactory.getDriver());
     private LoginPage loginPage = new LoginPage(DriverFactory.getDriver());
     public static ResourceBundle config =ResourceBundle.getBundle("config");
 
@@ -53,10 +53,11 @@ public class LeavePageSteps extends DriverFactory {
     }
     @When("user selects from and to dates on the leave screen")
     public void user_selects_from_and_to_dates_on_the_leave_screen() throws InterruptedException {
-        lp.selectDatePicker();
+
     }
     @When("user enters as {string} in comments section")
-    public void user_enters_as_in_comments_section(String string) {
+    public void user_enters_as_in_comments_section(String string)
+    {
         lp.enterComments(string);
     }
     @Then("Success message can be viewed by the user")
@@ -66,5 +67,15 @@ public class LeavePageSteps extends DriverFactory {
 
     @And("user clicks Apply button")
     public void userClicksApplyButton() {
+    }
+
+    @When("user selects {string} as from date on the leave screen")
+    public void userSelectsAsFromDateOnTheLeaveScreen(String fromDate) throws InterruptedException {
+        lp.selectDatePicker(fromDate);
+    }
+
+    @And("user selects {string} as to date on the leave screen")
+    public void userSelectsAsToDateOnTheLeaveScreen(String toDate) throws InterruptedException {
+        lp.selectDatePicker(toDate);
     }
 }
