@@ -12,14 +12,13 @@ import java.util.concurrent.TimeUnit;
 public class DriverFactory {
 
     private static DriverFactory instance = null;
-
+    //Thread local is used for parallel execution.
+    // this method initializes the driver according to the browser provided
+    private static ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
 
     private DriverFactory(){
         // Private constructor to prevent instantiation
     }
-    //Thread local is used for parallel execution.
-    // this method initializes the driver according to the browser provided
-    private static ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
 
     public static DriverFactory getInstance(){
         if(instance==null){
@@ -36,7 +35,7 @@ public class DriverFactory {
         if (browser == null) {
             throw new IllegalArgumentException("Browser parameter cannot be null.");
         }
-        System.out.println("Browser is"+browser);
+        System.out.println("Browser in driver factory is "+browser);
         switch (browser.toLowerCase()) {
             case "chrome":
                 WebDriverManager.chromedriver().setup();
@@ -63,9 +62,8 @@ public class DriverFactory {
         return driverThreadLocal.get();
     }
     public static void quitBrowser(){
-        if(driverThreadLocal.get()==null){
+//        if(driverThreadLocal.get()==null){
             driverThreadLocal.get().quit();
-            driverThreadLocal.remove();
-        }
+//            driverThreadLocal.remove();
     }
 }

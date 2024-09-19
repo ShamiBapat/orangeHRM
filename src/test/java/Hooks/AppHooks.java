@@ -6,24 +6,21 @@ import io.cucumber.java.Scenario;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.testng.ITestContext;
-import org.testng.annotations.Parameters;
-
-import java.util.ResourceBundle;
 
 //AppHooks class initializes and quits the driver properly
 public class AppHooks {
 
-   WebDriver driver;
-    public static ResourceBundle config =ResourceBundle.getBundle("config");
+   private WebDriver driver; // Instance variable instead of static//
+    // public static final ResourceBundle config =ResourceBundle.getBundle("config");
 
     @Before
 //    @Parameters("browser")
-    public void setup(Scenario scenario){
+    public void setup(){
         // Retrieve the browser parameter from the system properties set in the TestNG suite(xml file)
         String browser = System.getProperty("browser");
+        System.out.println("Browser in hooks: "+browser);
         driver = DriverFactory.getInstance().initDriver(browser);
-        driver.get(config.getString("validURL"));
+        driver.get("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
     }
 
     @After(order=0)

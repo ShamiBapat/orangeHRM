@@ -30,6 +30,7 @@ public class TestRunner extends AbstractTestNGCucumberTests{
 	public void setUp(String browser, ITestContext context) {
 		// Set the browser parameter as a system property
 		System.setProperty("browser", browser);
+		System.out.println("Browser passed to TestRunner: " + browser);
 	}
 
 	// With this setup, TestNG will run each scenario in parallel using the specified number of threads.
