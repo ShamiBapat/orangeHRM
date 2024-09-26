@@ -22,7 +22,7 @@ public class DriverFactory {
 
     public static DriverFactory getInstance(){
         if(instance==null){
-            synchronized (WebDriverManager.class){
+            synchronized (DriverFactory.class){
                 if(instance==null){
                     instance =new DriverFactory();
                 }
